@@ -1,6 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QStackedWidget
 
+
 # Import the individual screen widgets
 from home_screen import HomeScreenWidget
 from three_d_viewer_widget import ThreeDViewerWidget
