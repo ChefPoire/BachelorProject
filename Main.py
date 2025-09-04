@@ -11,6 +11,7 @@ class MyApp(QMainWindow):
     """
     The main application window that manages the screens (Home, 3D Viewer, Slice Preparer).
     """
+    
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Brain Slice Application")
