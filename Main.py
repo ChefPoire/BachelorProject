@@ -68,6 +68,7 @@ class MyApp(QMainWindow):
         self.stacked_widget.setCurrentIndex(2) # Index 2 self.slice_preparer
 
 # ===== APPLICATION ENTRY POINT ===== #
+
 if __name__ == '__main__':
 
     # Every PyQt application needs exactly one QApplication instance
