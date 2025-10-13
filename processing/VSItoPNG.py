@@ -1,81 +1,83 @@
+"""
+VSItoPNG.py
+
+Converts .VSI (while-slide image) files ot standard PNG images using OpenSlide.
+
+OpenSlide is a fully open-source library for reading whole-slide image formats
+(such as .svs, .vsi, .tif). It provides efficient reading of different zoom levels
+without needing Java or proprietary software.
+
+Usage:
+    python VSItoPNG.py input_file.vsi output_dir/
+
+Dependencies:
+    - openslide-python
+    - pillow
+    - numpy
+"""
+
 # Imports
-import os
-import javabridge # python_javabridge fork - NOT original javabridge <<< Dit  levert mega veel problemen op.... :(
-import bioformats
+import openslide
 import numpy as np
 from PIL import Image
+import os
+import sys
 
-# Import below might be redudant
-import glob
-
-
-def process_vsi_file(vsi_path, series_index, user_series_number, output_dir):
+# Define function
+def vsi_to_png(input_path, output_dir, level=0):
     """
-    Convert a single VSI file into PNG slices.
-    Saves the first slice of the given series as PNG.
+    Converts a .VSI file into one or more PNG-images.
+
+    Parameters
+    ---
+    input_path: str
+        Path to the .vsi file.
+    output_dir: str
+        Directory where the PNG-images will be saved.
+    level: int, optional
+        The OpenSlide zoom level to extract (0 = highest resolution, default).
+
+    Notes
+    ---
+    .VSI files are often very large, so you may not want to export the full
+    resolution image. You can specify a lower level to get a downsampled view.
     """
-    # Upload VSI file
-    filename = os.path.splitext(os.path.basename(vsi_path))[0]
 
-    # Create image reader
-    rdr = bioformats.formatreader.make_image_reader_class()()
-    rdr.setId(vsi_path)
-    rdr.setSeries(series_index)
+    # Open the VSI slide
+    slide = openslide.OpenSlide(input_path)
 
-    width = rdr.getSizeX()
-    height = rdr.getSizeY()
-    channels = rdr.getSizeC()
+    # Get slide dimensions for the chosen level
+    width, height = slide.level_dimensions[level]
+    print(f"Reading level {level} with size {width}x{height}")
 
-    # Read image data for z=0, c=0, t=0
-    index = rdr.getIndex(0, 0, 0)
-    pixel_bytes = rdr.openBytes(index)
-    img_array = np.frombuffer(pixel_bytes, dtype=np.uint8)
-    img_array = img_array.reshape((height, width, channels))
+    # Read the entire region at this level
+    # (0,0) is the top-left corner
+    region = slide.read_region((0,0), level, (width, height))
 
-    pil_img = Image.fromarray(img_array)
+    # Convert from RGBA to RGB
+    region = region.convert("RGB")
 
+    # Make sure output directory exists
     os.makedirs(output_dir, exist_ok=True)
-    output_filename = f"{filename}_S{user_series_number}.png"
-    output_path = os.path.join(output_dir, output_filename)
-    pil_img.save(output_path)
 
-    rdr.close()
-    print(f"Saved: {output_filename}")
-    return output_path
+    # Construct output filename
+    base_name = os.path.splitext(os.path.basename(input_path))[0]
+    output_path = os.path.jin(output_dir, f"{basename}_L{level}.png")
 
-def convert_vsi_to_png(vsi_file, output_dir, user_series_number=1):
-    """
-    High-level helper for Flask: handles JVM startup/shutdown,
-    processes VSI file, and returns the output PNG path.
-    """ 
-    series_index = user_series_number - 1 # 0-based index for BioFormats
+    # Save image
+    region.save(output_path)
+    print(f"Saved: {output_path}")
 
-    javabridge.start_vm(class_path=bioformats.JARS)
-    try:
-        output_path = process_vsi_file(
-            vsi_file, series_index, user_series_number, output_dir
-        )
-    finally:
-        javabridge.kill_vm()
+    # Optionally return the numpy array (for potential further processing)
+    return np.array(region)
 
-    return output_path
+if __name__ == "__main__":
+    # Example useage from command line
+    if len(sys.argv) < 3:
+        print("Usage: python VSItoPNG.py <input.vsi> <output_directory>")
+        sys.exit(1)
 
-# def main():
-#     vsi_folder = "E:\Slidescanner 02-05-2025"
-#     save_root = "E:\SlidescannerPNGs"
+    input_file = sys.argv[1]
+    output_folder = sys.argv[2]
 
-#     user_series_number = 17  # ← Set this to match what you see in Fiji (1-based)
-#     series_index = user_series_number - 1  # Bio-Formats uses 0-based indexing
-
-#     javabridge.start_vm(class_path=bioformats.JARS)
-#     try:
-#         vsi_files = glob.glob(os.path.join(vsi_folder, "*.vsi"))
-#         for vsi_path in vsi_files:
-#             output_subfolder = f"Series_{user_series_number}_PNGs"
-#             output_dir = os.path.join(save_root, output_subfolder)
-#             process_vsi_file(vsi_path, series_index, user_series_number, output_dir)
-#     finally:
-#         javabridge.kill_vm()
-
-# if __name__ == "__main__":
-#     main()
+    vsi_to_png(input_file, output_folder, level=0)
