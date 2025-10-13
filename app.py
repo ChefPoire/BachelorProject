@@ -1,49 +1,63 @@
 # Imports
 import os
-from flask import Flask, render_template, request, send_file, redirect, url_for, flash
-from processing.VSItoPNG import convert_vsi_to_png
+from flask import Flask, render_template, request, send_file, redirect, url_for, send_from_directory, flash
+from processing.VSItoPNG import vsi_to_png
 from processing import slice_processing
 from PIL import Image
 import numpy as np
 import plotly.graph_objects as go
 
+# Config
+# Folder where uploaded .vsi files are stored
 UPLOAD_FOLDER = "static/uploads"
+# Folder where generated .png files are stored
 OUTPUT_FOLDER = "static/outputs"
+# List of allowed extensions for uploaded files
 ALLOWED_EXTENSIONS = {"vsi"}
 
+# Initialize Flask webapp
 app = Flask(__name__)
 app.secret_key = "supersecretkey" # needed for flash messages
+
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["OUTPUT_FOLDER"] = OUTPUT_FOLDER
 
+# Create folders if they don't  exist
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route("/", methods=["GET","POST"])
+# Webapp logic: app routes
+@app.route("/")
+def index():
+    """
+    Homepage with upload form.
+    """
+    return render_template("index.html")
+
+@app.route("/upload", methods=["GET","POST"])
 def upload_file():
     """
-    Upload a file to the website for 3D modelling.
+    Handle file upload and conversion.
     """
-    # When a file is uploaded
+    # When a file is uploaded (POST-route)
     if request.method == "POST":
 
         # If no file is found, redirect to new request
         if "file" not in request.files:
-            flash("No file part")
-            return redirect(request.url)
-
-        file = request.files["file"]
+            flash("No file part in request")
+            return redirect(url_for("index"))
 
         # If no file is selected, redirect to new request
+        file = request.files["file"]
         if file.filename == "":
             flash("No selected file")
-            return redirect(request.url)
+            return redirect(url_for("index"))
         
         # If a file is selected, and has an allowed extension
-        if file and allowed_file(file.filename):
+        if file and allowed_file(file.filename.lower()):
             vsi_path = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
             file.save(vsi_path)
 

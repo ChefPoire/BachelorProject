@@ -1,14 +1,25 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
 <head>
-  <title>Brain Webapp</title>
+  <meta charset="UTF-8">
+  <title>Brain Webapp: VSI to PNG Converter</title>
 </head>
 <body>
-  <h1>Upload a VSI or PNG file</h1>
-  <form action="/upload" method="POST" enctype="multipart/form-data">
-    <input type="file" name="file">
-    <button type="submit">Upload</button>
+  <h1>Convert VSI to PNG</h1>
+  <form method="POST" action="{{ url_for('upload_file') }}" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".vsi" required>
+    <button type="submit">Upload & Convert</button>
   </form>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+          <li style="color:red;">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
 </body>
 </html>

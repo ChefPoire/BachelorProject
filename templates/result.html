@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Conversion Result</title>
+</head>
+<body>
+    <h1>Conversion Successful!</h1>
+    <p>Your VSI file has been converted to a PNG:</p>
+
+    <img src="{{ url_for('uploaded_file', filename=image_file) }}" alt="Converted Image" style="max-width:80%; border:1px solid #ccc;">
+
+    <br><br>
+    <a href="{{ url_for('index') }}">Convert another file</a>
+</body>
+</html>
