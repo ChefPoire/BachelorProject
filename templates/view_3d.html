@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+<head>
+    <title>3D Viewer</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+<h1>3D Volume Viewer</h1>
+<a href="{{ url_for('slice_preparer') }}">Back to Slice Preparer</a>
+<div>
+    {{ plot_div | safe }}
+</div>
+</body>
+</html>

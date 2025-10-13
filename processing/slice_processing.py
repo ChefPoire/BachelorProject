@@ -5,7 +5,7 @@ import numpy as np
 # Store multiple slices
 stored_slices = []
 
-def cut_slices(image: Image.Image, box: tuple) -> Image.Image:
+def cut_slice(image: Image.Image, box: tuple) -> Image.Image:
     """
     Crop a rectangular sice from the image.
     """
