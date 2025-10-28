@@ -1,24 +1,26 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Upload VSI</title>
-  </head>
-  <body>
-    <h1>Upload VSI File</h1>
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul>
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
+<!DOCTYPE html>
 
-    <form method="post" enctype="multipart/form-data">
-      <input type="file" name="file" accept=".vsi">
-      <input type="submit" value="Upload and Convert">
-    </form>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Upload VSI</title>
+</head>
+<body>
+  <h1>Upload VSI File</h1>
+  <form method="POST" action="{{ url_for('upload_file') }}" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".vsi" required>
+    <button type="submit">Upload & Convert</button>
+  </form>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+          <li style="color:red;">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+</body>
 </html>

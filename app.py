@@ -27,15 +27,23 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 def allowed_file(filename):
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS # <-- hier zit mogelijk een foutje in...
 
+# # # # #
 # Webapp logic: app routes
-@app.route("/")
+# Foutje in de index en upload routes...`
+# # # # # 
+
+
+@app.route("/", methods=["GET", "POST"])
 def index():
     """
-    Homepage with upload form.
+    Homepage with welcome message
     """
-    return render_template("index.html")
+    if request.method == "POST":
+        return render_template("upload.html")
+    else:
+        return render_template("index.html")
 
 @app.route("/upload", methods=["GET","POST"])
 def upload_file():
@@ -48,27 +56,45 @@ def upload_file():
         # If no file is found, redirect to new request
         if "file" not in request.files:
             flash("No file part in request")
-            return redirect(url_for("index"))
+            return render_template("upload.html")
 
         # If no file is selected, redirect to new request
         file = request.files["file"]
         if file.filename == "":
             flash("No selected file")
-            return redirect(url_for("index"))
+            return render_template("upload.html")
         
         # If a file is selected, and has an allowed extension
         if file and allowed_file(file.filename.lower()):
             vsi_path = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
             file.save(vsi_path)
+            print("#### 1 >>>> TOT HIER KOMT IE!!!")
+            # Convert to VSI to PNG using converter
+            try:
+                print("#### 2 >>>> TOT HIER KOMT IE!!!")
+                vsi_to_png(vsi_path, app.config["OUTPUT_FOLDER"], level=0)
+                print("#### 3 >>>> TOT HIER KOMT IE!!!")
+            except Exception as e:
+                flash(f"Error converting VSI file: {e}")
+                return render_template("upload.html")
+            
+            # Get the output file  name
+            base_name = os.path.splitext(file.filename)[0]
+            png_filename = f"{base_name}_L0.png"
 
-            # Convert to PNG
-            output_path = convert_vsi_to_png(vsi_path, app.config["OUTPUT_FOLDER"], user_series_number=1)
-
-            flash(f"File converted succesfully: {os.path.basename(output_path)}")
-            return send_file(output_path, as_attachment=True)
+            return render_template("result.html", image_file = png_filename)
         
-    return render_template("upload.html")
-   
+    elif request.method == "GET":
+        flash("Please upload a valid .vsi file.")
+        return redirect(url_for("index"))
+
+@app.route("/static/images/<filename>")
+def uploaded_file(filename):
+    """
+    Serve generated PNG images.
+    """
+    return send_from_directory(app.config["OUTPUT_FOLDER"], filename)
+
 @app.route("/slice-preparer", methods=["GET","POST"])
 def slice_preparer():
     """

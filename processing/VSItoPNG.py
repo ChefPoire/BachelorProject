@@ -53,7 +53,6 @@ def vsi_to_png(input_path, output_dir, level=0):
     # Read the entire region at this level
     # (0,0) is the top-left corner
     region = slide.read_region((0,0), level, (width, height))
-
     # Convert from RGBA to RGB
     region = region.convert("RGB")
 
@@ -62,7 +61,7 @@ def vsi_to_png(input_path, output_dir, level=0):
 
     # Construct output filename
     base_name = os.path.splitext(os.path.basename(input_path))[0]
-    output_path = os.path.jin(output_dir, f"{basename}_L{level}.png")
+    output_path = os.path.join(output_dir, f"{basename}_L{level}.png")
 
     # Save image
     region.save(output_path)
