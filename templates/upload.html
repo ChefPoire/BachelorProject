@@ -8,7 +8,7 @@
 <body>
   <h1>Upload VSI File</h1>
   <form method="POST" action="{{ url_for('upload_file') }}" enctype="multipart/form-data">
-    <input type="file" name="file" accept=".vsi" required>
+    <input type="file" name="file" accept=".vsi, .ply" required>
     <button type="submit">Upload & Convert</button>
   </form>
 

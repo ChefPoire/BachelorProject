@@ -1,14 +1,54 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>3D Viewer</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
-<h1>3D Volume Viewer</h1>
-<a href="{{ url_for('slice_preparer') }}">Back to Slice Preparer</a>
-<div>
-    {{ plot_div | safe }}
-</div>
+    <h1>3D Brain Viewer</h1>
+
+    <div id="plot" style="width: 80vw; height: 80vh;"></div>
+
+    <script>
+        fetch("/static/uploads/{{ ply_file }}")
+            .then(res => res.text())
+            .then(text => {
+                let vertices = [];
+                let faces = [];
+
+                text.split("\n").forEach(line => {
+                    if (line.startsWith("v ")) {   // vertex line
+                        const parts = line.split(" ").slice(1).map(Number);
+                        vertices.push(parts);
+                    }
+                    if (line.startsWith("f ")) {   // face index
+                        const idx = line.split(" ").slice(1).map(v => v - 1);
+                        faces.push(idx);
+                    }
+                });
+
+                const xs = vertices.map(v => v[0]);
+                const ys = vertices.map(v => v[1]);
+                const zs = vertices.map(v => v[2]);
+
+                const i = faces.map(f => f[0]);
+                const j = faces.map(f => f[1]);
+                const k = faces.map(f => f[2]);
+
+                let data = [{
+                    type: 'mesh3d',
+                    x: xs,
+                    y: ys,
+                    z: zs,
+                    i: i,
+                    j: j,
+                    k: k,
+                    opacity: 1
+                }];
+
+                Plotly.newPlot('plot', data);
+            });
+    </script>
 </body>
 </html>
