@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block title %}Conversion Result{% endblock %}
+
+{% block content %}
+<h2>Conversion Successful</h2>
+<p>Your VSI file has been converted:</p>
+
+<img src="{{ url_for('uploaded_file', filename=image_file) }}"
+     style="max-width:80%; border:1px solid #ccc;">
+
+<br><br>
+<a class="btn btn-primary" href="{{ url_for('index') }}">Convert Another</a>
+{% endblock %}

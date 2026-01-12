@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h2>Welcome</h2>
+
+<form action="/" method="POST">
+  <button class="btn btn-primary" type="submit">Upload Brain Slices</button>
+  <button class="btn btn-secondary" type="submit">Upload a 3D Brain</button>
+</form>
+{% endblock %}

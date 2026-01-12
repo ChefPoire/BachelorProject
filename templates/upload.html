@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block title %}Upload{% endblock %}
+
+{% block content %}
+<h2>Upload VSI or PLY</h2>
+
+<form method="POST" action="{{ url_for('upload_file') }}" enctype="multipart/form-data">
+  <input type="file" name="file" accept=".vsi,.ply" required>
+  <button class="btn btn-success mt-2" type="submit">Upload</button>
+</form>
+{% endblock %}

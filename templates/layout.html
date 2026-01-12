@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}3D Brain Project{% endblock %}</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+</head>
+
+<body class="container mt-4">
+
+  <!-- Header -->
+  <header class="mb-4">
+      <h1 class="text-primary">3D Brain Project</h1>
+      <hr>
+  </header>
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="alert alert-warning">
+        {% for msg in messages %}
+          <div>{{ msg }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- PAGE CONTENT -->
+  {% block content %}
+  {% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+{% block title %}3D Viewer{% endblock %}
+
+{% block content %}
+<h2>3D Brain Viewer</h2>
+
+<div id="plot" style="width:80vw; height:80vh;"></div>
+
+<script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+
+<script>
+    /* your existing JS unchanged */
+    fetch("/uploads/{{ ply_file }}")
+        .then(res => res.text())
+        .then(text => {
+            const lines = text.split("\n");
+            let i = 0;
+            
+            // Return error if not PLY-file
+            if (!lines[i].startsWith("ply")) {
+                console.error("Not a PLY file");
+                return;
+            }
+            
+            // Look at next line of file
+            i++;
+            let vertexCount = 0;
+            let faceCount = 0;
+            
+            // Skip to the part of the file with the data
+            while (!lines[i].startsWith("end_header")) {
+                if (lines[i].startsWith("element vertex"))
+                    vertexCount = parseInt(lines[i].split(" ")[2]);
+
+                if (lines[i].startsWith("element face"))
+                    faceCount = parseInt(lines[i].split(" ")[2]);
+
+                i++;
+            }
+
+            i++;
+
+            const vertices = lines.slice(i, i + vertexCount).map(l => l.split(" ").map(Number));
+            i += vertexCount;
+
+            const faces = lines.slice(i, i + faceCount).map(l => {
+                const parts = l.split(" ").map(Number);
+                parts.shift();
+                return parts;
+            });
+
+
+            // Create the 3D Plot
+            Plotly.newPlot("plot", [{
+                type: "mesh3d",
+                x: vertices.map(v => v[0]),
+                y: vertices.map(v => v[1]),
+                z: vertices.map(v => v[2]),
+                i: faces.map(f => f[0]),
+                j: faces.map(f => f[1]),
+                k: faces.map(f => f[2]),
+                opacity: 1
+            }]);
+        });
+
+</script>
+
+{% endblock %}

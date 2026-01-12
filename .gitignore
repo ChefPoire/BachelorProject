@@ -1,0 +1,49 @@
+# ----------------------------------
+# Python cache / compiled files
+# ----------------------------------
+__pycache__/
+*.py[cod]
+*.so
+*.pyd
+*.dll
+*.pyc
+*.csv
+*.h5
+*.sqlite
+*.ply
+
+# ----------------------------------
+# Virtual Environments
+# ----------------------------------
+venv/
+.env/
+ENV/
+.venv/
+.ENV/
+
+# ----------------------------------
+# Jupyter
+# ----------------------------------
+.ipynb_checkpoints/
+
+# ----------------------------------
+# IDE / Editor
+# ----------------------------------
+.vscode/
+.idea/
+
+# ----------------------------------
+# OS clutter
+# ----------------------------------
+.DS_Store
+*.swp
+
+# ----------------------------------
+# Large project files (recommended)
+# ----------------------------------
+# If you have large data / outputs, ignore them here:
+data/
+datasets/
+models/
+checkpoints/
+logs/
