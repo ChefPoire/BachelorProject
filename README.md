@@ -40,10 +40,6 @@ Understanding neuroanatomy requires insight into the three-dimensional spatial o
 
 A 3D visualization tool addresses these limitations by enabling users to explore brain structures interactively in three dimensions. This allows for a more intuitive understanding of anatomical relationships, and supports the visualization of individual brains rather than population averages. By making these models accessible through a web-based interface, the tool combines flexibility and accessibility of modern digital platforms, enhancing both educational and research applications.
 
----
-TOT HIER GEKOMEN
----
-
 ## Installation (local)
 ### 1. Clone the repository  
 ```bash
@@ -67,6 +63,29 @@ or if you want to run it without debug mode on:
 python app.py
 ```
 ### 4. Open http://localhost:5000 in your browser.
+
+## Project Structure
+```
+Stage_Project
+├─ app.py
+├─ processing
+│  ├─ slice_processing.py
+│  └─ VSItoPNG.py
+├─ README.md
+├─ requirements.txt
+├─ static
+│  ├─ images
+│  ├─ outputs
+│  └─ uploads
+└─ templates
+   ├─ index.html
+   ├─ layout.html
+   ├─ result.html
+   ├─ slice_preparer.html
+   ├─ upload.html
+   └─ view_3d.html
+
+```
 
 ## License
 This project is licensed under the [MIT License](LICENSE).  
