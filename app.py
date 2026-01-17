@@ -9,7 +9,7 @@ import plotly.graph_objects as go
 import pyvista as pv
 
 # Config
-# Folder where uploaded .vsi files are stored
+# Folder where uploaded .vsi and .ply files are stored
 UPLOAD_FOLDER = "static/uploads"
 # Folder where generated .png files are stored
 OUTPUT_FOLDER = "static/outputs"
@@ -27,9 +27,11 @@ app.config["OUTPUT_FOLDER"] = OUTPUT_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
+# Function for with files are allowed to be uploaded
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
+# Landing page
 @app.route("/", methods=["GET", "POST"])
 def index():
     """
@@ -40,6 +42,7 @@ def index():
     else:
         return render_template("index.html")
 
+# Upload page for uploading vsi or ply files
 @app.route("/upload", methods=["GET","POST"])
 def upload_file():
     """
@@ -96,6 +99,7 @@ def upload_file():
         flash("Please upload a valid .vsi file.")
         return redirect(url_for("index"))
 
+# View the 3D Model
 @app.route("/view_3d/<filename>")
 def view_3d(filename):
     file_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
@@ -104,6 +108,7 @@ def view_3d(filename):
         return redirect(url_for("index"))
     return render_template("view_3d.html", ply_file=filename)
 
+# View the created png image
 @app.route("/static/images/<filename>")
 def uploaded_file(filename):
     """
@@ -111,11 +116,11 @@ def uploaded_file(filename):
     """
     return send_from_directory(app.config["OUTPUT_FOLDER"], filename)
 
+# Serve the uploaded file to html page
 @app.route("/uploads/<path:filename>")
 def serve_upload(filename):
     return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
 
-
-
+# Main script debug mode on
 if __name__ == "__main__":
     app.run(debug=True)
