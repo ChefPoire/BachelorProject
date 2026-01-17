@@ -1,63 +1,54 @@
 # Bachelor Project Psychobiology: <br>3D Brain Imaging Project
 
 ## Description
-**BankjeMaps** is a mobile-friendly web app that helps people discover, enjoy, and share public benches ("bankjes") in their environment.
+This project is a web-based 3D visualization tool designed to support the exploration of neuroanatomical brain data. It enables users to upload, process, and visualize three-dimensional brain models derived from physical specimens. The tool was developed to improve accessibility, usability, and sustainability of neuroanatomical resources, particularly in educational and research contexts.
+
+The application builds upon earlier prototype work by transforming a local, single-user visualization tool into an open-source web application. By relying exclusively on existing data and specimens from naturally deceased animals, the project aligns with ethical principles of animal well-being while expanding the possibilities for digital neuroanatomy.
 
 ### What does it do?
-BankjeMaps makes it easy to:
-- find nearby bankjes on an interactive map
-- view photos, descriptions, and names of bankjes
-- Add new bankjes with images and descriptions
-- Rate or favourite bankjes to keep track of the best spots
+The 3D visualization tool allows users to:
+
+- Upload 3D brain models (e.g. .ply-files) and microscopy data (e.g. .vsi-files) through a web interface
+- Convert uploaded microscopy data into viewable image formats (not fully implemented yet)
+- Visualize three-dimensional brain models directly in a browser environment
+- Reuse previously generated models, reducing the need for new data acquisition
+
+The tool is designed to support both educational use, such as teaching spatial neuroanatomy, and research-oriented exploration, including comparison of individual brain models.
 
 ### How does it work?
-- Users can **log in** or **register** for an account to access the platform.
-- Upon login, users are shown a dynamic map of nearby bankjes.
-- Each bankje has a **detail page** with its name, user-submitted rating, description, and photos.
-- Users can **add new bankjes** via a form that collects a name, description, photo, and location.
-- New photo uploads are **moderated** by the community before appearing on the map.
-- Users can **rate bankjes** or **mark them as favourites** for easy access later.
+- Users access the application through a web browser and upload supported files via a simple interface.
+
+- Uploaded files are handled by a Flask-based backend that validates, stores, and processes the data on the server.
+
+    - Depending on the file type, the system routes the data through different processing pipelines:
+
+    - Microscopy files are converted into image outputs (not fully implemented yet).
+
+- 3D mesh files are prepared for interactive visualization.
+
+- Processed outputs are made available to the user through the web interface, allowing inspection of images or 3D models without requiring specialized local software.
+
+- The modular design allows future extensions, such as integrating tracer slice data into 3D models or expanding visualization functionality.
 
 ### Target Audience
-BankjeMaps is for **anyone looking to relax outside**, wheter during a walk, bike ride, or while exploring a city. Because the app is mainly accessed on-the-go, it is optimized for **mobile use**.
+The 3D brain visualization tool is primarily intended for students, educators, and researchers working with neuroanatomical data, and three-dimensional brain models in particular. These user groups were explicitly considered during the design and development of the application, with an emphasis on accessibility, clarity, and ease of use in both educational and research settings.
 
-### Why BankjeMaps?
-While apps like [benchfinder.ch](https://benchfinder.ch) exist, they **lack features** like photos, descriptions, ratings, or community-driven contributions.  
-BankjeMaps fills this gap by allowing:
-- Full bench pages with names, images, and details
-- Users to "discover" a bench and give it a name (e.g., “Discovered by [username]”)
-- A user-friendly, IMDB-style rating system
-- Community-based moderation to ensure valid content
+At the same time, the tool is not limited to these audiences. Any individual with access to suitable brain imaging or 3D anatomical data, and an interest in exploring or visualizing such data, can make use of the application. Its open-source nature and web-based implementation allow it to be adapted to a wide range of use cases beyond formal academic environments.
 
-## Tech Stack
-- **Frontend:** HTML, Bootstrap, Leaflet.js
-- **Backend:** Flask (Python)
-- **Database:** PostgreSQL
-- **Additional Tools:** JavaScript for map interactivity
+### Why a 3D visualization tool?
+Understanding neuroanatomy requires insight into the three-dimensional spatial organization of brain structures and their connections. Traditional two-dimensional representations, such as histological slices or static atlas images, often fail to convey the complex geometry and spatial relationships that underlie brain function. While existing digital atlases provide valuable reference material, they typically focus on standardized brains and lack information about individual variability and anatomical connectivity derived from tracer experiments.
 
-## Screenshots and DemoVideo
-### Light Mode
-<img src="static/Images/MockUps/mockup_light_1.png" alt="Mockup Light 1" width="250"/>
-<img src="static/Images/MockUps/mockup_light_2.png" alt="Mockup Light 2" width="250"/>
+A 3D visualization tool addresses these limitations by enabling users to explore brain structures interactively in three dimensions. This allows for a more intuitive understanding of anatomical relationships, and supports the visualization of individual brains rather than population averages. By making these models accessible through a web-based interface, the tool combines flexibility and accessibility of modern digital platforms, enhancing both educational and research applications.
 
-### Dark Mode
-<img src="static/Images/MockUps/mockup_dark_1.png" alt="Mockup Dark 1" width="250"/>
-<img src="static/Images/MockUps/mockup_dark_2.png" alt="Mockup Dark 2" width="250"/>
-
-### Other examples
-<img src="static/Images/MockUps/mockup_dark_start.png" alt="Mockup Dark Start" width="250">
-<img src="static/Images/MockUps/mockup_dark_profile.png" alt="Mockup Dark Profile" width="250">
-
-### Demo Video
-<video width="250" controls>
-  <source src="static/BankjeMaps_DemoVideo.mp4" type="video/mp4">
-</video>
+---
+TOT HIER GEKOMEN
+---
 
 ## Installation (local)
 ### 1. Clone the repository  
 ```bash
-git clone https://github.com/minprog-platforms/project-ChefPoire
-cd BankjeMaps
+git clone https://github.com/ChefPoire/BachelorProject
+cd Stage_Project
 ```
 
 ### 2. Set up virtual environment and install dependencies:
@@ -71,43 +62,12 @@ python -m pip install -r requirements.txt
 ```bash
 flask run --debug
 ```
-
+or if you want to run it without debug mode on:
+```
+python app.py
+```
 ### 4. Open http://localhost:5000 in your browser.
-
-## Roadmap / Future Features
-- User profiles with profile photos
-- Friend system to see each other's favorite bankjes
-- Review system for rating bankjes with additional comments
-- More detailed moderation dashboard
-- Tagging features (e.g., "shady", "quiet", "great view", "trash can close-by")
-
-## Developed by
-Peer ten Klooster<br>
-Minor Programmeren Project<br>
-University of Amsterdam
 
 ## License
 This project is licensed under the [MIT License](LICENSE).  
 You are free to use, modify, and distribute this software with proper attribution.
-
-## References & Acknowledgements
-This project was developed as part of the Minor Programmeren at the University of Amsterdam.
-
-Special thanks to the following tools, libraries, and resources that made this project possible:
-
-- Brian Yu and David Malan, CSCI S-33a at Harvard, published 2019 under a Creative Commons Attribution-Noncommercial-Share Alike 3.0 Unported license.
-- David Malan, CS164 at Harvard, published 2012 under a Creative Commons Attribution-Noncommercial-Share Alike 3.0 Unported license.
-- Flask – for powering the Python backend.
-- Leaflet.js – for the interactive maps and marker functionality.
-- Bootstrap – for responsive frontend components and layout.
-- Flaticon – for providing icons.
-- SQLite – for simple and lightweight database management.
-- Jinja2 – for rendering dynamic HTML templates.
-- OpenStreetMap – for map tile data used with Leaflet.
-- JawgLab - for additional map tile data used with Leaflet.
-- Inspiration for the project idea was drawn from sites like benchfinder.ch.
-- overpass-turbo.eu - for GeoJson data used to create marker data used with Leaflet.
-- UIverse.io - for the theme toggler in the navigation bar.
-
-Additional thanks to:
-- Fellow students and instructors at UvA for their guidance and feedback.
